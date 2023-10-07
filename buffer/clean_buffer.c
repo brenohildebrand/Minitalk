@@ -1,16 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   protocol.h                                         :+:      :+:    :+:   */
+/*   clean_buffer.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/06 05:15:34 by bhildebr          #+#    #+#             */
-/*   Updated: 2023/10/06 05:15:34 by bhildebr         ###   ########.fr       */
+/*   Created: 2023/10/06 23:12:55 by bhildebr          #+#    #+#             */
+/*   Updated: 2023/10/06 23:12:55 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PROTOCOL_H
-#define PROTOCOL_H
+#include "buffer.h"
 
-#endif
+int	clean_buffer(t_buffer *buffer)
+{
+	buffer->current_length = 0;
+	return (SUCCESS);
+}

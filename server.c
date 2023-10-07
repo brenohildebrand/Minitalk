@@ -14,15 +14,42 @@
 #include <unistd.h>
 #include <signal.h>
 #include <stdio.h>
+#include "buffer/buffer.h"
 
-void	sigusr1_handler(int signum)
-{
-	printf("Received SIGUSR1 signal (%d)\n", signum);
-}
+t_buffer	*message;
 
-void	sigusr2_handler(int signum)
+void	sigusr_handler(int signum)
 {
-	printf("Received SIGUSR2 signal (%d)\n", signum);
+	static int	bit = 0;
+	static char	character = '\0';
+
+	printf("A signal was received!\n");
+
+	if (bit == 8)
+	{
+		if (character == '\0')
+		{
+			print_buffer(message);
+			clean_buffer(message);
+		}
+		else
+		{
+			add_character_to_buffer(message, character);
+		}
+		bit = 0;
+		character = '\0';
+	}
+	if (signum == SIGUSR1)
+	{
+		printf("Received 1\n");
+		character |= (1 << bit);
+	}
+	else
+	{
+		printf("Received 0\n");
+		// do nothing ... the bit is already 0
+	}
+	bit += 1;
 }
 
 int	main(void)
@@ -33,14 +60,17 @@ int	main(void)
 	pid = getpid();
 	printf("%d\n", pid);
 
+
+	if (malloc_buffer(&message) == ERROR)
+		return (0);
 	// register signal handlers
 	//	if the signal is SIGUSR1 then turn the bit on
 	//	if the signal is SIGUSR2 then turn the bit off
 	//	if it's the 8th bit append the character to the string
 	//	if the character is '\0' it's the end of the message, so print
 	//	the string and clean it to prepare to the next message
-	signal(SIGUSR1, sigusr1_handler);
-	signal(SIGUSR2, sigusr2_handler);
+	signal(SIGUSR1, sigusr_handler);
+	signal(SIGUSR2, sigusr_handler);
 
 	// wait for signals
 	while (1)
