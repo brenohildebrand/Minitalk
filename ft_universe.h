@@ -1,19 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print_buffer.c                                     :+:      :+:    :+:   */
+/*   ft_universe.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/12 18:34:10 by bhildebr          #+#    #+#             */
-/*   Updated: 2023/09/19 15:36:12 by bhildebr         ###   ########.fr       */
+/*   Created: 2023/12/06 14:11:07 by bhildebr          #+#    #+#             */
+/*   Updated: 2023/12/08 20:34:05 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "buffer.h"
+#ifndef FT_UNIVERSE_H
+# define FT_UNIVERSE_H
 
-int	print_buffer(t_buffer *buffer)
-{
-	write(1, buffer->content, buffer->current_length);
-	return (SUCCESS);
-}
+# include <stdlib.h>
+# include <unistd.h>
+
+void	print_int(int value);
+void	print_cstring(char *cstring);
+
+#endif

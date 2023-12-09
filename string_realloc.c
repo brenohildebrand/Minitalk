@@ -1,36 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   realloc_buffer_content.c                           :+:      :+:    :+:   */
+/*   string_realloc.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/12 18:33:16 by bhildebr          #+#    #+#             */
-/*   Updated: 2023/09/18 14:57:00 by bhildebr         ###   ########.fr       */
+/*   Created: 2023/12/08 10:51:15 by bhildebr          #+#    #+#             */
+/*   Updated: 2023/12/08 22:16:07 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "buffer.h"
+#include "string.h"
 
-int	realloc_buffer_content(
-	t_buffer *buffer,
-	unsigned long original_length,
-	unsigned long new_length
-){
+void	string_realloc(t_string *string)
+{
 	char			*new_content;
-	unsigned long	i;
+	unsigned int	i;
 
-	new_content = (char *)malloc(new_length);
-	if (new_content == NULL)
-		return (ERROR);
+	new_content = memory_create(2 * (*string)->size);
 	i = 0;
-	while (i < original_length)
+	while (i < (*string)->length)
 	{
-		new_content[i] = buffer->content[i];
+		new_content[i] = (*string)->content[i];
 		i++;
 	}
-	free(buffer->content);
-	buffer->content = new_content;
-	buffer->max_length = new_length;
-	return (SUCCESS);
+	new_content[i] = '\0';
+	free((*string)->content);
+	(*string)->content = new_content;
+	(*string)->size *= 2;
 }

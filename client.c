@@ -10,85 +10,75 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <signal.h>
-#include <unistd.h>
-#include <stdlib.h>
+#include "client.h"
+
+#define OK 1
+#define KO 0
+
+static int	*get_status(void)
+{
+	static int	status = KO;
+
+	return (&status);
+}
+
+void	send_signal(pid_t pid, int signal)
+{
+	int	*status;
+
+	if (kill(pid, signal) != 0)
+		exit(1);
+	pause();
+	status = get_status();
+	if (*status != OK)
+	{
+		send_signal(pid, signal);
+	}
+}
+
+void	signal_handler(int signal)
+{
+	int	*status;
+	
+	status = get_status();
+	if (signal == SIGUSR1)
+	{
+		*status = OK;
+	}
+}
 
 int	main(int argc, char *argv[])
 {
+	int		pid;
+	int		i;
+	int		j;
+
 	if (argc != 3)
 	{
 		printf("Usage: ./client <server-pid> <string>\n");
 		return (0);
 	}
-
-	// validate pid
-	int	pid;
-
 	pid = atoi(argv[1]);
-	printf("to pid: %d\n", pid);
-
-	// validate string
-	char	*string;
-	
-	string = argv[2];
-
-	printf("string: %s\n", string);
-
-	// for each bit of each byte/char of the string, send the SIGUSR1 if
-	// it is on, or the SIGUSR2 otherwise. This is the protocol.
-	int		i;
-	int		j;
-
+	signal(SIGUSR1, signal_handler);
 	i = 0;
-	while (string[i])
+	while (argv[2][i])
 	{
 		j = 0;
-		while (j < 7)
+		while (j < 8)
 		{
-			if ((string[i] & (1 << j)) != 0)
-			{
-				printf("Sending 1\n");
-				if (kill(pid, SIGUSR1) != 0)
-					return (1);
-			}
+			if ((argv[2][i] & (1 << j)) != 0)
+				send_signal(pid, SIGUSR1);
 			else
-			{
-				printf("Sending 0\n");
-				if (kill(pid, SIGUSR2) != 0)
-					return (1);
-			}
+				send_signal(pid, SIGUSR2);
 			j++;
-			pause();
-			if (was_signal_received)
-			{
-				// do nothing
-			}
-			else
-			{
-				// retry
-			}
 		}
 		i++;
 	}
 	j = 0;
-	while (j < 7)
+	while (j < 8)
 	{
-		if ('\0' & (1 << j))
-		{
-			// printf("Sending 1\n");
-			if (kill(pid, SIGUSR1) != 0)
-				return (1);
-		}
-		else
-		{
-			// printf("Sending 0\n");
-			if (kill(pid, SIGUSR2) != 0)
-				return (1);
-		}
+		send_signal(pid, SIGUSR2);
 		j++;
 	}
-
 	return (0);
 }

@@ -1,20 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_buffer.c                                      :+:      :+:    :+:   */
+/*   string_create.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/12 18:33:27 by bhildebr          #+#    #+#             */
-/*   Updated: 2023/09/14 06:24:41 by bhildebr         ###   ########.fr       */
+/*   Created: 2023/12/08 10:45:23 by bhildebr          #+#    #+#             */
+/*   Updated: 2023/12/08 10:53:43 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "buffer.h"
+#include "string.h"
 
-int	free_buffer(t_buffer *buffer)
+t_string	string_create(void)
 {
-	free(buffer->content);
-	free(buffer);
-	return (SUCCESS);
+	t_string	string;
+
+	string = memory_create(sizeof(struct s_string));
+	string->length = 0;
+	string->size = 1 * sizeof(char);
+	string->content = memory_create(string->size);
+	string->content[0] = '\0';
+	return (string);
 }

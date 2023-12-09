@@ -16,38 +16,53 @@ SERVER_NAME = server
 CC = gcc
 CFLAGS = -Wall -Werror -Wextra
 
-BUFFER_DIR = ./buffer
-BUFFER_INCLUDES = buffer.h
-BUFFER_SOURCES = \
-				malloc_buffer.c \
-				free_buffer.c \
-				clean_buffer.c \
-				realloc_buffer_content.c			
-				print_buffer.c \
-				add_character_to_buffer.c
-BUFFER_OBJECTS = \
-				malloc_buffer.o \
-				free_buffer.o \
-				clean_buffer.o \
-				realloc_buffer_content.o \
-				print_buffer.o \
-				add_character_to_buffer.o
+CLIENT_HEADERS = \
+	client.h \
+	ft_universe.h
+CLIENT_SOURCES = \
+	client.c
+CLIENT_OBJECTS = \
+	client.o
+
+SERVER_HEADERS = \
+	server.h \
+	ft_universe.h \
+	memory.h \
+	string.h
+SERVER_SOURCES = \
+	memory_create.c \
+	memory_destroy.c \
+	print_cstring.c \
+	print_int.c \
+	server.c \
+	string_append_char.c \
+	string_create.c \
+	string_destroy.c \
+	string_print.c \
+	string_realloc.c
+SERVER_OBJECTS = \
+	memory_create.o \
+	memory_destroy.o \
+	print_cstring.o \
+	print_int.o \
+	server.o \
+	string_append_char.o \
+	string_create.o \
+	string_destroy.o \
+	string_print.o \
+	string_realloc.o
 
 all: client server
 
-client:
-	$(CC) client.c -o $(CLIENT_NAME)
+client: $(CLIENT_OBJECTS)
+	$(CC) $(CLIENT_OBJECTS) -o $(CLIENT_NAME)
 
-server: buffer
-	$(CC) server.c -o $(SERVER_NAME)
-
-buffer: $(BUFFER_OBJECTS)
-
-$(BUFFER_OBJECTS): $(BUFFER_SOURCES)
+server: $(SERVER_OBJECTS)
+	$(CC) $(SERVER_OBJECTS) -o $(SERVER_NAME)
 
 clean:
-	$(RM) client.o
-	$(RM) server.o
+	$(RM) $(CLIENT_OBJECTS)
+	$(RM) $(SERVER_OBJECTS)
 
 fclean: clean
 	$(RM) $(CLIENT_NAME)
@@ -55,4 +70,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all client server buffer clean fclean re
+.PHONY: all client server clean fclean re

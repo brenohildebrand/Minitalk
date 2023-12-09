@@ -1,27 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   add_character_to_buffer.c                          :+:      :+:    :+:   */
+/*   string_print.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/12 18:33:42 by bhildebr          #+#    #+#             */
-/*   Updated: 2023/09/18 14:54:07 by bhildebr         ###   ########.fr       */
+/*   Created: 2023/12/08 20:06:10 by bhildebr          #+#    #+#             */
+/*   Updated: 2023/12/08 22:10:09 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "buffer.h"
+#include "string.h"
 
-int	add_character_to_buffer(t_buffer *buffer, char character)
+void	string_print(t_string string)
 {
-	if (buffer->current_length + 1 > buffer->max_length)
-	{
-		if (realloc_buffer_content(
-				buffer,
-				buffer->max_length,
-				buffer->max_length * 2) == ERROR)
-			return (ERROR);
-	}
-	buffer->content[buffer->current_length++] = character;
-	return (SUCCESS);
+	write(1, "PRINTING:\n", 11);
+	write(1, string->content, string->length);
+	write(1, "\n", 1);
+	write(1, "ENDING\n", 8);
 }
