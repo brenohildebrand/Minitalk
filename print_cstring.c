@@ -6,11 +6,11 @@
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 09:20:31 by bhildebr          #+#    #+#             */
-/*   Updated: 2023/12/08 09:21:45 by bhildebr         ###   ########.fr       */
+/*   Updated: 2023/12/10 16:43:11 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "shared.h"
+#include "ft_universe.h"
 
 void	print_cstring(char *cstring)
 {
@@ -20,5 +20,4 @@ void	print_cstring(char *cstring)
 	while (cstring[len])
 		len++;
 	write(1, cstring, len);
-	write(1, "\n", 1);
 }

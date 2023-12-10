@@ -10,73 +10,76 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "server.h"
+#include "server.h"
+
+static void	sigusr1_and_sigusr2_handler(int signal, siginfo_t *info)
+{
+	static int		bit = 7;
+	static char		character = 0;
+
+	if (signal == SIGUSR1)
+		character |= (1 << bit);
+	else
+		character |= (0 << bit);
+	if (bit == 0)
+	{
+		if (character == '\0')
+			print_cstring("\n");
+		else
+			write(1, &character, 1);
+		bit = 7;
+		character = 0;
+	}
+	else
+		bit--;
+	usleep(1000);
+	if (kill(info->si_pid, SIGUSR1) != 0)
+		exit(1);
+}
 
 void	signal_handler(int signal, siginfo_t *info, void *context)
 {
-	static int		bit = 0;
-	static char		character = 0;
-	static t_string	string = 0;
-
+	(void)signal;
+	(void)info;
 	(void)context;
-	if (string == 0)
-		string = string_create();
 	if (signal == SIGUSR1 || signal == SIGUSR2)
 	{
-		if (signal == SIGUSR1)
-		{
-			printf("Receiving 1\n");
-			character |= (1 << bit);
-			if (kill(info->si_pid, SIGUSR1) != 0)
-				exit(1);
-		}
-		else
-		{
-			printf("Receiving 0\n");
-			character |= (0 << bit);
-			if (kill(info->si_pid, SIGUSR1) != 0)
-				exit(1);
-		}
-		if (bit == 7)
-		{
-			if (character == '\0')
-			{
-				printf("%s\n", string->content);
-				// printf("printing and cleaning up\n");
-				// string_print(string);
-				string_destroy(string);
-				string = 0;
-			}
-			else
-			{
-				printf("adding character: %c\n", character);
-				string_append_char(&string, character);
-			}
-			bit = 0;
-			character = 0;
-		}
-		else
-		{
-			bit++;
-		}
+		sigusr1_and_sigusr2_handler(signal, info);
 	}
+	else
+	{
+		exit(4);
+	}
+}
+
+static void	print_pid(void)
+{
+	pid_t	pid;
+
+	pid = getpid();
+	print_cstring("PID:\t");
+	print_int(pid);
+	print_cstring("\n");
 }
 
 int	main(void)
 {
 	struct sigaction	sa;
 
-	print_int(getpid());
+	print_pid();
 	sa.sa_sigaction = signal_handler;
 	sa.sa_flags = SA_SIGINFO;
 	if (sigaction(SIGUSR1, &sa, NULL) != 0)
 	{
+		print_cstring("Could not set up SIGUSR1 handler.\n");
 		exit(1);
 	}
 	if (sigaction(SIGUSR2, &sa, NULL) != 0)
 	{
+		print_cstring("Could not set up SIGUSR2 handler.\n");
 		exit(1);
 	}
+	print_cstring("Waiting for client...\n");
 	while (1)
 	{
 		sleep(1);

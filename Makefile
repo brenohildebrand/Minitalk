@@ -14,45 +14,34 @@ CLIENT_NAME = client
 SERVER_NAME = server
 
 CC = gcc
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra -g
 
 CLIENT_HEADERS = \
 	client.h \
 	ft_universe.h
 CLIENT_SOURCES = \
-	client.c
+	client.c \
+	print_cstring.c
 CLIENT_OBJECTS = \
-	client.o
+	client.o \
+	print_cstring.o
 
 SERVER_HEADERS = \
 	server.h \
-	ft_universe.h \
-	memory.h \
-	string.h
+	ft_universe.h
 SERVER_SOURCES = \
-	memory_create.c \
-	memory_destroy.c \
 	print_cstring.c \
 	print_int.c \
-	server.c \
-	string_append_char.c \
-	string_create.c \
-	string_destroy.c \
-	string_print.c \
-	string_realloc.c
+	server.c
 SERVER_OBJECTS = \
-	memory_create.o \
-	memory_destroy.o \
 	print_cstring.o \
 	print_int.o \
-	server.o \
-	string_append_char.o \
-	string_create.o \
-	string_destroy.o \
-	string_print.o \
-	string_realloc.o
+	server.o
 
-all: client server
+all: norm client server
+
+norm:
+	norminette $(CLIENT_HEADERS) $(CLIENT_SOURCES) $(SERVER_HEADERS) $(SERVER_SOURCES)
 
 client: $(CLIENT_OBJECTS)
 	$(CC) $(CLIENT_OBJECTS) -o $(CLIENT_NAME)

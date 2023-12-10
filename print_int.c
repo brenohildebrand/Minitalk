@@ -6,11 +6,11 @@
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 14:10:22 by bhildebr          #+#    #+#             */
-/*   Updated: 2023/12/07 14:30:52 by bhildebr         ###   ########.fr       */
+/*   Updated: 2023/12/10 10:25:50 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "shared.h"
+#include "ft_universe.h"
 
 static unsigned int	count_digits(int value)
 {
@@ -68,6 +68,5 @@ void	print_int(int value)
 	cstring = int_to_cstring(value);
 	len = get_cstring_len(cstring);
 	write(1, cstring, len);
-	write(1, "\n", 1);
 	free(cstring);
 }

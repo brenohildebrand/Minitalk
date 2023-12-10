@@ -5,80 +5,70 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/06 01:49:57 by bhildebr          #+#    #+#             */
-/*   Updated: 2023/10/06 01:49:57 by bhildebr         ###   ########.fr       */
+/*   Created: 2023/12/10 10:21:27 by bhildebr          #+#    #+#             */
+/*   Updated: 2023/12/10 16:41:47 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "client.h"
 
-#define OK 1
-#define KO 0
-
-static int	*get_status(void)
+static void	send_character(pid_t server_pid, char character)
 {
-	static int	status = KO;
+	unsigned int	j;
 
-	return (&status);
-}
-
-void	send_signal(pid_t pid, int signal)
-{
-	int	*status;
-
-	if (kill(pid, signal) != 0)
-		exit(1);
-	pause();
-	status = get_status();
-	if (*status != OK)
+	j = 8;
+	while (j--)
 	{
-		send_signal(pid, signal);
+		if ((character & (1 << j)) != 0)
+		{
+			if (kill(server_pid, SIGUSR1) != 0)
+				exit(1);
+			pause();
+		}
+		else
+		{
+			if (kill(server_pid, SIGUSR2) != 0)
+				exit(1);
+			pause();
+		}
 	}
 }
 
-void	signal_handler(int signal)
+void	signal_handler(int signal, siginfo_t *info, void *context)
 {
-	int	*status;
-	
-	status = get_status();
+	(void)signal;
+	(void)info;
+	(void)context;
 	if (signal == SIGUSR1)
-	{
-		*status = OK;
-	}
+		return ;
+	else
+		exit(3);
 }
 
 int	main(int argc, char *argv[])
 {
-	int		pid;
-	int		i;
-	int		j;
+	unsigned int		i;
+	char				character;
+	int					server_pid;
+	struct sigaction	sa;
 
 	if (argc != 3)
 	{
-		printf("Usage: ./client <server-pid> <string>\n");
-		return (0);
+		print_cstring("Usage: ./client <server_pid> <string>\n");
 	}
-	pid = atoi(argv[1]);
-	signal(SIGUSR1, signal_handler);
+	server_pid = atoi(argv[1]);
+	sa.sa_sigaction = signal_handler;
+	sa.sa_flags = SA_SIGINFO;
+	if (sigaction(SIGUSR1, &sa, NULL) != 0)
+	{
+		exit(1);
+	}
 	i = 0;
 	while (argv[2][i])
 	{
-		j = 0;
-		while (j < 8)
-		{
-			if ((argv[2][i] & (1 << j)) != 0)
-				send_signal(pid, SIGUSR1);
-			else
-				send_signal(pid, SIGUSR2);
-			j++;
-		}
+		character = argv[2][i];
+		send_character(server_pid, character);
 		i++;
 	}
-	j = 0;
-	while (j < 8)
-	{
-		send_signal(pid, SIGUSR2);
-		j++;
-	}
-	return (0);
+	send_character(server_pid, '\0');
 }
