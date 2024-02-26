@@ -12,14 +12,16 @@
 
 #include "server.h"
 
-static void	sigusr1_and_sigusr2_handler(int signal, siginfo_t *info)
+void	signal_handler(int signal, siginfo_t *info, void *context)
 {
 	static int		bit = 7;
 	static char		character = 0;
 
+	(void)context;
+	usleep(1000);
 	if (signal == SIGUSR1)
 		character |= (1 << bit);
-	else
+	else if (signal == SIGUSR2)
 		character |= (0 << bit);
 	if (bit == 0)
 	{
@@ -32,24 +34,8 @@ static void	sigusr1_and_sigusr2_handler(int signal, siginfo_t *info)
 	}
 	else
 		bit--;
-	usleep(1000);
 	if (kill(info->si_pid, SIGUSR1) != 0)
 		exit(1);
-}
-
-void	signal_handler(int signal, siginfo_t *info, void *context)
-{
-	(void)signal;
-	(void)info;
-	(void)context;
-	if (signal == SIGUSR1 || signal == SIGUSR2)
-	{
-		sigusr1_and_sigusr2_handler(signal, info);
-	}
-	else
-	{
-		exit(4);
-	}
 }
 
 static void	print_pid(void)

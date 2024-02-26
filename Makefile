@@ -21,10 +21,12 @@ CLIENT_HEADERS = \
 	ft_universe.h
 CLIENT_SOURCES = \
 	client.c \
-	print_cstring.c
+	print_cstring.c \
+	ft_atoi.c
 CLIENT_OBJECTS = \
 	client.o \
-	print_cstring.o
+	print_cstring.o \
+	ft_atoi.o
 
 SERVER_HEADERS = \
 	server.h \
@@ -59,4 +61,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all client server clean fclean re
+.PHONY: all clean fclean re
