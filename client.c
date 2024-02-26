@@ -6,7 +6,7 @@
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/10 10:21:27 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/02/26 15:27:32 by bhildebr         ###   ########.fr       */
+/*   Updated: 2024/02/26 16:50:29 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ int	main(int argc, char *argv[])
 	int					server_pid;
 	struct sigaction	sa;
 
+	ft_bzero(&sa, sizeof(struct sigaction));
 	if (argc != 3)
 	{
 		print_cstring("Usage: ./client <server_pid> <string>\n");

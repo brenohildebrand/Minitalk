@@ -22,11 +22,15 @@ CLIENT_HEADERS = \
 CLIENT_SOURCES = \
 	client.c \
 	print_cstring.c \
-	ft_atoi.c
+	ft_atoi.c \
+	ft_bzero.c \
+	ft_memset.c
 CLIENT_OBJECTS = \
 	client.o \
 	print_cstring.o \
-	ft_atoi.o
+	ft_atoi.o \
+	ft_bzero.o \
+	ft_memset.o
 
 SERVER_HEADERS = \
 	server.h \
@@ -34,11 +38,15 @@ SERVER_HEADERS = \
 SERVER_SOURCES = \
 	print_cstring.c \
 	print_int.c \
-	server.c
+	server.c \
+	ft_bzero.c \
+	ft_memset.c
 SERVER_OBJECTS = \
 	print_cstring.o \
 	print_int.o \
-	server.o
+	server.o \
+	ft_bzero.o \
+	ft_memset.o
 
 all: norm client server
 

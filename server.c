@@ -18,7 +18,6 @@ void	signal_handler(int signal, siginfo_t *info, void *context)
 	static char		character = 0;
 
 	(void)context;
-	usleep(300);
 	if (signal == SIGUSR1)
 		character |= (1 << bit);
 	else if (signal == SIGUSR2)
@@ -52,6 +51,7 @@ int	main(void)
 {
 	struct sigaction	sa;
 
+	ft_bzero(&sa, sizeof(struct sigaction));
 	print_pid();
 	sa.sa_sigaction = signal_handler;
 	sa.sa_flags = SA_SIGINFO;
