@@ -18,7 +18,7 @@ void	signal_handler(int signal, siginfo_t *info, void *context)
 	static char		character = 0;
 
 	(void)context;
-	usleep(1000);
+	usleep(300);
 	if (signal == SIGUSR1)
 		character |= (1 << bit);
 	else if (signal == SIGUSR2)
